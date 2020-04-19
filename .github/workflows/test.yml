@@ -17,6 +17,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - uses: actions-rs/cargo@v1
         with:
           command: check
@@ -48,6 +49,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - uses: actions-rs/cargo@v1
         with:
           command: test
@@ -84,6 +86,7 @@ jobs:
           toolchain: stable
           override: true
           components: rustfmt, clippy
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - uses: actions-rs/cargo@v1
         with:
           command: fmt
@@ -132,6 +135,7 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
+      - uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
       - uses: actions-rs/cargo@v1
         with:
           command: build
