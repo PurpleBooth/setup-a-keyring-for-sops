@@ -40,7 +40,7 @@ brew install setup-a-keyring-for-sops
 ```
 
 You can also download the [latest
-release](https://github.com/PurpleBooth/art-station-i-guess/releases/latest)
+release](https://github.com/PurpleBooth/setup-a-keyring-for-sops/releases/latest)
 and run it.
 
 ## License
