@@ -36,7 +36,7 @@ brew tap PurpleBooth/repo
 Next install the binary
 
 ``` shell
-brew install setup-a-keyring-for-sops
+brew install PurpleBooth/repo/setup-a-keyring-for-sops
 ```
 
 You can also download the [latest
