@@ -1,4 +1,1 @@
-use std::env;
-
-fn main() {
-}
+fn main() {}
