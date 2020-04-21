@@ -4,6 +4,7 @@ version = "0.5.0"
 authors = ["Billie Thompson <billie+setup-a-keyring-for-sops@billiecodes.com>"]
 edition = "2018"
 description = "Create a key for use with SOPS in gcloud."
+license = "Creative Commons Zero v1.0 Universal"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
