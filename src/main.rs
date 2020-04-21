@@ -3,6 +3,7 @@ extern crate serde_json;
 #[macro_use]
 extern crate simple_error;
 
+use clap::{crate_authors, crate_version};
 use clap::{App, Arg};
 use serde::{Deserialize, Serialize};
 use simple_error::SimpleError;
@@ -10,10 +11,10 @@ use std::process::{Command, ExitStatus, Output, Stdio};
 use std::str;
 
 fn main() -> Result<(), SimpleError> {
-    let matches = App::new(env!("APP_NAME"))
-        .version(env!("VERSION"))
-        .author(env!("AUTHOR_EMAIL"))
-        .about("Create a key for use with SOPS in gcloud.")
+    let matches = App::new(env!("CARGO_PKG_NAME"))
+        .version(crate_version!())
+        .author(crate_authors!())
+        .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
             Arg::with_name("gcloud-configuration-name")
                 .help("The configuration name to use for the local gcloud configuration")
