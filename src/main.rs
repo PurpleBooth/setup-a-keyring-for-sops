@@ -49,8 +49,8 @@ fn main() -> Result<()> {
     let keyring = &matches.value_of("gcloud-keyring").unwrap().to_string();
     let key = &matches.value_of("gcloud-key").unwrap().to_string();
 
-    let active_configuration = active_configuration().expect("Failed to get active configuration");
-    let configurations = configurations().expect("Failed to load configuration config");
+    let active_configuration = active_configuration()?;
+    let configurations = configurations()?;
 
     if !configurations.contains(&configuration_name.to_string()) {
         create_configuration(&configuration_name)?;
