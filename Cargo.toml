@@ -5,6 +5,10 @@ authors = ["Billie Thompson <billie+setup-a-keyring-for-sops@billiecodes.com>"]
 edition = "2018"
 description = "Create a key for use with SOPS in gcloud."
 license = "Creative Commons Zero v1.0 Universal"
+readme = "README.md"
+keywords = ["artstation", "downloader"]
+categories = ["web-programming::http-client", "command-line-utilities"]
+repository = "https://github.com/PurpleBooth/setup-a-keyring-for-sops"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
