@@ -58,9 +58,9 @@ checksum = "b8b7a7c0c47db5545ed3fef7468ee7bb5b74691498139e4b3f6a20685dc6dd8e"
 
 [[package]]
 name = "libc"
-version = "0.2.70"
+version = "0.2.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3baa92041a6fec78c687fa0cc2b3fae8884f743d672cf551bed1d6dac6988d0f"
+checksum = "9457b06509d27052635f90d6466700c65095fdf75409b3fbdd903e988b886f49"
 
 [[package]]
 name = "proc-macro2"
@@ -119,7 +119,7 @@ dependencies = [
 
 [[package]]
 name = "setup-a-keyring-for-sops"
-version = "0.8.12"
+version = "0.8.13"
 dependencies = [
  "clap",
  "serde",
