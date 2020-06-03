@@ -1,10 +1,11 @@
 # Setup a Keyring in GCloud for SOPS
 
-This sets up the keyring and project and everything needed to do things in SOPS
+This sets up the keyring and project and everything needed to do things
+in SOPS
 
 ## Usage
 
-```bash
+``` bash
 setup-a-keyring-for-sops dev
 Billie Thompson <billie+setup-a-keyring-for-sops@purplebooth.co.uk>
 Create a key for use with SOPS in gcloud.
@@ -23,7 +24,6 @@ ARGS:
     <gcloud-key>                   The name of the key in the keyring in gcloud
 
 ```
-
 
 ## Installing
 
