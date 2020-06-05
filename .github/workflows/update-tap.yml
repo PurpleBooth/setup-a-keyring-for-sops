@@ -60,6 +60,8 @@ jobs:
       - shell: bash
         run: |
           set -euo pipefail
+          brew cask install google-cloud-sdk
+
           FORMULA_LOCATION="homebrew-repo/Formula/$REPOSITORY_NAME.rb"
 
           if [ ! -f "$FORMULA_LOCATION" ] || ! grep -q "$(cat ./hash/hash)" "$FORMULA_LOCATION" ; then
