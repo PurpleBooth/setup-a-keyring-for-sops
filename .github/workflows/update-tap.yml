@@ -60,7 +60,8 @@ jobs:
       - shell: bash
         run: |
           set -euo pipefail
-          brew cask install google-cloud-sdk
+          curl https://sdk.cloud.google.com > install.sh
+          bash install.sh --disable-prompts
 
           FORMULA_LOCATION="homebrew-repo/Formula/$REPOSITORY_NAME.rb"
 
