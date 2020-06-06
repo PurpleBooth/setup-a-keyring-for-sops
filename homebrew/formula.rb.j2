@@ -5,17 +5,17 @@ class SetupAKeyringForSops < Formula
   sha256 "{{ file_sha }}"
 
   depends_on "rust" => :build
-  
+
+  def install
+    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
+  end
+
   def caveats
     <<~EOS
       At runtime, gcloud must be accessible from your PATH.
       You can install gcloud from Homebrew Cask:
         brew cask install google-cloud-sdk
     EOS
-  end
-
-  def install
-    system "cargo", "install", "--locked", "--root", prefix, "--path", "."
   end
 
   test do
