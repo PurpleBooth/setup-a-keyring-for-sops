@@ -73,7 +73,6 @@ jobs:
           cp -r ./homebrew-repo/. "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
 
           brew test-bot \
-            --skip-setup \
             --bintray-org="$BINTRAY_ORG" \
             --root-url="$BINTRAY_DL_URL" \
             --tap purplebooth/homebrew-repo \
