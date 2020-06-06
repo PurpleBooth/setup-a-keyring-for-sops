@@ -11,12 +11,12 @@ show-help:
 .PHONY: test
 ## Test it was built ok
 test:
-	RUST_BACKTRACE=1 rustup run stable cargo test
+	RUST_BACKTRACE=1 rustup run stable cargo test --locked
 
 .PHONY: build
 ## Test it was built ok
 build:
-	rustup run stable cargo build
+	rustup run stable cargo build --locked
 
 .PHONY: lint
 ## Lint it
