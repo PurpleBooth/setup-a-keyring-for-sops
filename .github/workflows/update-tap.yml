@@ -60,8 +60,8 @@ jobs:
       - shell: bash
         run: |
           set -euo pipefail
-          curl https://sdk.cloud.google.com > install.sh
-          bash install.sh --disable-prompts
+          
+          brew cask install google-cloud-sdk
 
           FORMULA_LOCATION="homebrew-repo/Formula/$REPOSITORY_NAME.rb"
 
@@ -73,6 +73,7 @@ jobs:
           cp -r ./homebrew-repo/. "$(brew --repo)/Library/Taps/purplebooth/homebrew-repo"
 
           brew test-bot \
+            --skip-setup \
             --bintray-org="$BINTRAY_ORG" \
             --root-url="$BINTRAY_DL_URL" \
             --tap purplebooth/homebrew-repo \
