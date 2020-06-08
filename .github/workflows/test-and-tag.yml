@@ -139,6 +139,7 @@ jobs:
       - shell: bash
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
+          git checkout -b temp
           git add . && git stash || true
           git rebase origin/master
           git checkout master
