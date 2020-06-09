@@ -46,6 +46,7 @@ jobs:
           repository: PurpleBooth/homebrew-repo
           token: ${{ secrets.COMMITTER_TOKEN }}
           path: homebrew-repo
+          ref: main
       - uses: actions/checkout@v2
         with:
           token: ${{ secrets.COMMITTER_TOKEN }}
@@ -60,10 +61,13 @@ jobs:
       - shell: bash
         run: |
           set -euo pipefail
-          
-          brew cask install google-cloud-sdk
 
           FORMULA_LOCATION="homebrew-repo/Formula/$REPOSITORY_NAME.rb"
+
+          brew update
+          brew upgrade
+
+          brew cask install google-cloud-sdk
 
           if [ ! -f "$FORMULA_LOCATION" ] || ! grep -q "$(cat ./hash/hash)" "$FORMULA_LOCATION" ; then
             cp formula/formula.rb "homebrew-repo/Formula/$REPOSITORY_NAME.rb"
