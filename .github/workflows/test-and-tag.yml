@@ -3,6 +3,9 @@
     branches:
       - '*'
   pull_request: null
+    
+name: test-and-tag
+
 jobs:
   check:
     runs-on: ubuntu-latest
@@ -49,7 +52,6 @@ jobs:
           default: true
       - uses: actions-rs/cargo@v1
         with:
-          args: "--locked"
           command: test
   lints:
     runs-on: ubuntu-latest
@@ -78,7 +80,7 @@ jobs:
           command: clippy
           args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
   merge-and-push:
-    if: ( github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v') )
+    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v')
     needs:
       - test
       - lints
@@ -134,10 +136,15 @@ jobs:
         run: |
           git config user.name "GitHub"
           git config user.email "noreply@github.com"
-
-          git fetch
           git commit -am "Release $(cat ./version/version)"
           git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
-          git pull --rebase
-          git push
           git push --tags
+          
+          git checkout -b "release-$(cat ./version/version)"
+          git push -f origin "$(cat ./version/version)"
+      - name: pull-request
+        uses: repo-sync/pull-request@v2
+        with:
+          github_token: '${{ secrets.COMMITTER_TOKEN }}'
+          pr_label: "automerge"
+          destination_branch: "main"
