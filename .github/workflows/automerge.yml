@@ -1,0 +1,46 @@
+name: automerge
+on:
+  schedule:    
+    - cron: "*/5 * * * *"
+  pull_request:
+    types:
+      - opened
+      - edited
+      - assigned
+      - unassigned
+      - review_requested
+      - review_request_removed
+      - ready_for_review
+      - labeled 
+      - unlabeled
+      - synchronize
+      - locked
+      - unlocked 
+      - reopened
+  pull_request_review:
+    types:
+      - submitted
+  check_suite:
+    types:
+      - completed
+  status: {}
+jobs:
+  automerge-dependencies:
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.8.4"
+        env:
+          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
+          MERGE_METHOD: rebase 
+          MERGE_LABELS: dependencies 
+          MERGE_RETRY_SLEEP: "100000"  
+  automerge-label:
+    runs-on: ubuntu-latest
+    steps:
+      - name: automerge
+        uses: "pascalgn/automerge-action@v0.8.4"
+        env:
+          GITHUB_TOKEN: "${{ secrets.COMMITTER_TOKEN }}"
+          MERGE_METHOD: rebase
+          MERGE_RETRY_SLEEP: "100000"
