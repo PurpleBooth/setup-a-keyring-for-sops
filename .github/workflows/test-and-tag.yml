@@ -75,7 +75,7 @@ jobs:
           ~/.cargo/git
           ~/.cargo/bin
           target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.*') }}
     - uses: actions-rs/toolchain@v1
       with:
         profile: minimal
