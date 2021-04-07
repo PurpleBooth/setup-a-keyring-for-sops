@@ -1,156 +1,142 @@
-'on':
+on:
   push:
     branches:
-      - '*'
-  pull_request: null
-    
+    - '*'
+  pull_request:
+
 name: test-and-tag
 
 jobs:
+  security-audit:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2.3.4
+    - uses: actions/cache@v2.1.4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/audit-check@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+  version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2.3.4
+      with:
+        fetch-depth: 0
+    - uses: chaaz/versio-actions/install@v1.1
+      name: Install versio
+    - name: Check projects
+      run: versio check
+    - name: Print changes
+      run: versio plan
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_USER: ${{ github.actor }}
   check:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        default: true
+    - uses: actions-rs/cargo@v1
+      with:
+        command: check
   test:
-    runs-on: '${{ matrix.os }}'
+    runs-on: ${{ matrix.os }}
     strategy:
       matrix:
         include:
-          - os: macos-latest
-          - os: ubuntu-latest
-          - os: windows-latest
+        - os: macos-latest
+        - os: ubuntu-latest
+        - os: windows-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          default: true
-      - uses: actions-rs/cargo@v1
-        with:
-          command: test
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        default: true
+    - uses: actions-rs/cargo@v1
+      with:
+        command: test
   lints:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          default: true
-          components: 'rustfmt, clippy'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: '--all -- --check'
-      - uses: actions-rs/cargo@v1
-        with:
-          command: clippy
-          args: '--all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic -D clippy::cargo'
+    - uses: actions/checkout@v2
+    - uses: actions/cache@v2
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          ~/.cargo/bin
+          target
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+    - uses: actions-rs/toolchain@v1
+      with:
+        profile: minimal
+        toolchain: nightly
+        default: true
+        components: rustfmt, clippy
+    - uses: actions-rs/cargo@v1
+      with:
+        command: fmt
+        args: --all -- --check
+    - uses: actions-rs/cargo@v1
+      with:
+        command: clippy
+        args: --all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic
+          -D clippy::cargo
   merge-and-push:
-    if: github.ref == 'refs/heads/main' && !contains(github.event.head_commit.message, 'Release v')
+    if: github.ref == 'refs/heads/main'
     needs:
-      - test
-      - lints
-      - check
+    - version
+    - test
+    - lints
+    - check
+    - security-audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: nightly
-          default: true
-      - uses: actions/checkout@v2
-        with:
-          token: '${{ secrets.COMMITTER_TOKEN }}'
-          fetch-depth: 0  
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/.cargo/registry
-            ~/.cargo/git
-            ~/.cargo/bin
-            target
-          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-      - run: git fetch --depth=1 origin +refs/tags/*:refs/tags/*
-      - id: get_previous_version
-        run: echo ::set-output name=PREVIOUS_VERSION::$(git tag --sort=-creatordate | head -n 1)
-        shell: bash
-      - id: semvers
-        uses: WyriHaximus/github-action-next-semvers@master
-        with:
-          version: '${{ steps.get_previous_version.outputs.PREVIOUS_VERSION }}'
-      - run: mkdir -p ./version
-      - if: "!contains(github.event.head_commit.message, 'BC BREAK') && !contains(github.event.head_commit.message, 'Signed-off-by: dependabot-preview[bot] <support@dependabot.com>')"
-        run: echo "$VERSION" >./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_minor }}
-      - if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
-        run: echo "$VERSION" >./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_patch }}
-      - run: echo "$VERSION" > ./version/version
-        env:
-          VERSION: ${{ steps.semvers.outputs.v_major }}
-        if: "contains(github.event.head_commit.message, 'BC BREAK')"
-      - shell: bash
-        id: get_version
-        run: |
-          echo ::set-output "name=VERSION::$( cat ./version/version )"
-      - shell: bash
-        run: |
-          sed -i'.bak' "s/version = \"[0-9.]\\{5,\\}\"/version = \"$(cat ./version/version | tail -c +2)\"/1" Cargo.toml
-          rm Cargo.toml.bak
-      - uses: actions-rs/cargo@v1
-        with:
-          command: check
-      - shell: bash
-        run: |
-          git config user.name "GitHub"
-          git config user.email "noreply@github.com"
-          git commit -am "Release $(cat ./version/version)"
-          git tag -a -m "Release $(cat ./version/version)" "$(cat ./version/version)"
-          git push --tags
-          
-          git checkout -b "release-$(cat ./version/version)"
-          git push -f origin "release-$(cat ./version/version)"
-      - name: pull-request
-        uses: repo-sync/pull-request@v2
-        with:
-          github_token: '${{ secrets.COMMITTER_TOKEN }}'
-          pr_label: "releases"
-          destination_branch: "main"
-          source_branch: "release-${{ steps.get_version.outputs.VERSION }}"
-
+    - uses: actions/checkout@v2.3.4
+      with:
+        token: ${{ secrets.COMMITTER_TOKEN }}
+        fetch-depth: 0
+    - name: Import GPG key
+      uses: crazy-max/ghaction-import-gpg@v3
+      with:
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+        passphrase: ${{ secrets.GPG_PASSPHRASE }}
+        git-user-signingkey: true
+        git-commit-gpgsign: true
+        git-tag-gpgsign: true
+    - uses: chaaz/versio-actions/install@v1.1
+      name: Install versio
+    - name: Generate release
+      run: versio release
+      env:
+        GITHUB_TOKEN: ${{ secrets.COMMITTER_TOKEN }}
+        GITHUB_USER: ${{ github.actor }}
