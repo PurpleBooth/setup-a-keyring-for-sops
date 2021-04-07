@@ -83,6 +83,10 @@ jobs:
       run: echo ::set-output name=VERSION::v$(toml get Cargo.toml package.version
         | tail -c +2 | head -c -2)
       shell: bash
+    - id: get_previous_version
+      name: Calculate previous version
+      run: echo ::set-output name=PREVIOUS_VERSION::$(git tag | sort --version-sort
+        | tail -n 3 | head -n 1)
     - uses: dlavrenuek/conventional-changelog-action@v1.1.0
       id: changelog
       with:
