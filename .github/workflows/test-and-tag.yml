@@ -55,7 +55,7 @@ jobs:
         profile: minimal
         toolchain: nightly
         default: true
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         command: check
   test:
@@ -81,7 +81,7 @@ jobs:
         profile: minimal
         toolchain: nightly
         default: true
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         command: test
   lints:
@@ -102,11 +102,11 @@ jobs:
         toolchain: nightly
         default: true
         components: rustfmt, clippy
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         command: fmt
         args: --all -- --check
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         command: clippy
         args: --all-targets --all-features -- -D warnings -Dclippy::style -D clippy::pedantic

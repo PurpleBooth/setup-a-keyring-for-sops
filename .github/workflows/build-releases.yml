@@ -23,7 +23,7 @@ jobs:
         default: true
         profile: minimal
         toolchain: nightly
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         args: --release --locked
         command: build
@@ -71,7 +71,7 @@ jobs:
         default: true
         profile: minimal
         toolchain: nightly
-    - uses: actions-rs/cargo@v1
+    - uses: actions-rs/cargo@v1.0.3
       with:
         args: toml-cli
         command: install
