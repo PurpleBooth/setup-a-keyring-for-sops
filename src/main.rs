@@ -53,7 +53,7 @@ fn main() -> Result<()> {
     let configurations = configurations()?;
 
     if !configurations.contains(&configuration_name.to_string()) {
-        create_configuration(&configuration_name)?;
+        create_configuration(configuration_name)?;
     }
 
     if let Some(configuration) = &active_configuration {
@@ -98,7 +98,7 @@ fn active_configuration() -> Result<Option<String>> {
         .output()
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
-    let value: Vec<Configuration> = serde_json::from_str::<Vec<Configuration>>(&output_stdout)
+    let value: Vec<Configuration> = serde_json::from_str::<Vec<Configuration>>(output_stdout)
         .map_err(Box::<dyn Error>::from)?;
     let configurations: Vec<String> = value
         .into_iter()
@@ -121,7 +121,7 @@ fn configurations() -> Result<Vec<String>> {
         .output()
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
-    let value: Vec<Configuration> = serde_json::from_str::<Vec<Configuration>>(&output_stdout)
+    let value: Vec<Configuration> = serde_json::from_str::<Vec<Configuration>>(output_stdout)
         .map_err(Box::<dyn Error>::from)?;
     Ok(value
         .into_iter()
@@ -197,7 +197,7 @@ fn is_cloudkms_service_enabled(configuration: &str) -> Result<bool> {
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
     let value: Vec<Configuration> =
-        serde_json::from_str::<Vec<_>>(&output_stdout).map_err(Box::<dyn Error>::from)?;
+        serde_json::from_str::<Vec<_>>(output_stdout).map_err(Box::<dyn Error>::from)?;
     Ok(!value.is_empty())
 }
 
@@ -212,7 +212,7 @@ fn enable_cloudkms_service(configuration: &str) -> Result<bool> {
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
     let value: Vec<Configuration> =
-        serde_json::from_str::<Vec<_>>(&output_stdout).map_err(Box::<dyn Error>::from)?;
+        serde_json::from_str::<Vec<_>>(output_stdout).map_err(Box::<dyn Error>::from)?;
     Ok(!value.is_empty())
 }
 
@@ -236,7 +236,7 @@ fn is_keyring_existent(configuration: &str, project: &str, keyring: &str) -> Res
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
     let value: Vec<Configuration> =
-        serde_json::from_str::<Vec<_>>(&output_stdout).map_err(Box::<dyn Error>::from)?;
+        serde_json::from_str::<Vec<_>>(output_stdout).map_err(Box::<dyn Error>::from)?;
     Ok(!value.is_empty())
 }
 
@@ -276,7 +276,7 @@ fn is_key_existent(configuration: &str, project: &str, keyring: &str, key: &str)
         .map_err(Box::<dyn Error>::from)?;
     let output_stdout = str::from_utf8(&output.stdout).map_err(Box::<dyn Error>::from)?;
     let value: Vec<Configuration> =
-        serde_json::from_str::<Vec<_>>(&output_stdout).map_err(Box::<dyn Error>::from)?;
+        serde_json::from_str::<Vec<_>>(output_stdout).map_err(Box::<dyn Error>::from)?;
     Ok(!value.is_empty())
 }
 
