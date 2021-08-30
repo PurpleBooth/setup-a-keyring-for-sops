@@ -121,7 +121,7 @@ dependencies = [
 
 [[package]]
 name = "setup-a-keyring-for-sops"
-version = "0.42.12"
+version = "0.42.13"
 dependencies = [
  "clap",
  "serde",
