@@ -16,25 +16,25 @@ fn main() -> Result<()> {
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
         .arg(
-            Arg::with_name("gcloud-configuration-name")
+            Arg::new("gcloud-configuration-name")
                 .help("The configuration name to use for the local gcloud configuration")
                 .index(1)
                 .required(true),
         )
         .arg(
-            Arg::with_name("gcloud-project")
+            Arg::new("gcloud-project")
                 .help("The ID of the project to create the keyring in in gcloud")
                 .index(2)
                 .required(true),
         )
         .arg(
-            Arg::with_name("gcloud-keyring")
+            Arg::new("gcloud-keyring")
                 .help("The name of the keyring in gcloud")
                 .index(3)
                 .required(true),
         )
         .arg(
-            Arg::with_name("gcloud-key")
+            Arg::new("gcloud-key")
                 .help("The name of the key in the keyring in gcloud")
                 .index(4)
                 .required(true),
@@ -52,7 +52,7 @@ fn main() -> Result<()> {
     let active_configuration = active_configuration()?;
     let configurations = configurations()?;
 
-    if !configurations.contains(&configuration_name.to_string()) {
+    if !configurations.contains(configuration_name) {
         create_configuration(configuration_name)?;
     }
 
