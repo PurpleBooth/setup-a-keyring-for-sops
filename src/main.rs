@@ -2,7 +2,7 @@ extern crate serde;
 extern crate serde_json;
 
 use clap::{crate_authors, crate_version};
-use clap::{App, Arg};
+use clap::{Arg, Command as ClapCommand};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 use std::process::{Command, ExitStatus, Output, Stdio};
@@ -11,7 +11,7 @@ use std::str;
 type Result<T> = std::result::Result<T, Box<dyn Error>>;
 
 fn main() -> Result<()> {
-    let matches = App::new(env!("CARGO_PKG_NAME"))
+    let matches = ClapCommand::new(env!("CARGO_PKG_NAME"))
         .version(crate_version!())
         .author(crate_authors!())
         .about(env!("CARGO_PKG_DESCRIPTION"))
