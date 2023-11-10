@@ -53,7 +53,7 @@ jobs:
         GIT_REPO: ${{ github.repository }}
         GIT_TAG: ${{ github.ref }}
       name: Calculate the binary hash
-    - uses: cuchi/jinja2-action@v1.2.0
+    - uses: cuchi/jinja2-action@v1.2.2
       with:
         template: main-repo/homebrew/formula.rb.j2
         output_file: formula.rb
